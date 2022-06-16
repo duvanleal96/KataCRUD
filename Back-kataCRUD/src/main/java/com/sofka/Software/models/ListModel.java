@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase lista modelo , se realiza la creacion de las columnas de la tabla lista
+ */
 @Data
 @Entity
 @Table(name = "lista")
