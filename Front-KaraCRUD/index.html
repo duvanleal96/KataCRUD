@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
+    <h1>To-Do-List</h1>  
+    <div class="input-group mb-3" >
+    <form class="d-flex">
+        <input class="form-control me-sm-2" type="text" placeholder="¿Lista de To-Do?">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Agregar</button>
+      </form>
+    </div>
+    <tbody >
+    </tbody>
+    <template id="crud-template">
+            <h2 id="nombre lista"></h2>
+            <form class="d-flex">
+                <input class="form-control me-sm-2" type="text" placeholder="¿Que piensas hacer?">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit" id ="crearTarea">Crear</button>
+              </form>
+              <tr>
+                <th>ID Tarea</th>
+                <th>¿completado?</th>
+            </tr>
+    </template>  
+</div>
+</body>
+    <script src="/js/list.js"></script>
+</html>
