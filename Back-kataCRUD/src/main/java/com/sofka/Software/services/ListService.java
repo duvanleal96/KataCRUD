@@ -5,6 +5,10 @@ import com.sofka.Software.repositories.ListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ *
+ * @author Duvan Leal
+ */
 @Service
 public class ListService {
     @Autowired

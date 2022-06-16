@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Clase lista tareas controllador , permite mappear los servicios en la base de datos
+ * @author Duvan Leal
  */
 @Slf4j
 @CrossOrigin
