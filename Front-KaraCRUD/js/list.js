@@ -7,6 +7,8 @@ const d = document,
 const url = 'http://localhost:8080';
 let resultado = ''
 let resultadoSub = ''
+let subtarea = {};
+
 
 //funcon boton crear , permite guardar en el input el nombre de la nueva lista a crear
 $crear.addEventListener('click', e => {
@@ -16,7 +18,7 @@ $crear.addEventListener('click', e => {
 })
 //Funcion crear lista , consulta la ruta del fetch y realiza el metodo post con los datos 
 async function crearList(lista) {
-    
+    if (lista) {
         let options = {
             method: "POST",
             headers: {
@@ -28,57 +30,64 @@ async function crearList(lista) {
         },
             res = await fetch(`${url}/task`, options)
         mostrarList();
-    } 
+    } else {
+        alert("ingrese una tarea por favor!")
+    }
+}
 
 //muestra las listas en la BD
 async function mostrarList() {
     let res = await fetch(`${url}/listas`)
     let data = await res.json()
-    .catch(error => console.log(error))
+        .catch(error => console.log(error))
     mostrar(data)
-   // console.log(data);
+    // console.log(data);
 }
+mostrarList()
 
 //Muesta la lista creada y permite interactuar con esta 
 const mostrar = (listas) => {
-   
-    listas.forEach(lista => {  
-        resultadoSub=''
+
+    listas.forEach(lista => {
+        resultadoSub = ''
         lista.listTask.forEach(sub => {
             resultadoSub += ` <tr>
-            <td class="id">${sub.id}</td>
-            <td class="Tarea">${sub.name}</td>
-            <td class="completado">
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-            </td>
-            <td class="opciones">
-                <button type="button" id="editar${sub.id}" class="btn btn-secondary">Editar</button>
-                <button class="eliminar btn btn-secondary" type="button" id="eliminar${sub.id}" >Eliminar</button>
-            </td>
-        </tr>`
+                <td class="id">${sub.id}</td>
+                <td class="Tarea">${sub.name}</td>
+                <td class="completado">
+                    <input class="validar form-check-input" id="validar${sub.id}" type="checkbox" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+                </td>
+                <td class="opciones">
+                    <button class="editar btn btn-secondary" value="${sub.id}" type="button" id="editar${sub.id}" class="editar btn btn-secondary">Editar</button>
+                    <button class="eliminar btn btn-secondary" type="button" id="eliminar${sub.id}" >Eliminar</button>
+                </td>
+            </tr>`
         })
         resultado += ` <hr>
-    <div class="input-group mb-5">
-        <h2 id="nombre-lista">${lista.name}</h2>
-        <spam class = "spamId" area hidden true>${lista.id}</spam>
-        <button class="EliminarTarea btn btn-secondary my-2 my-sm-0 type="submit" id="borrar${lista.id}" ">Eliminar</button>
-    </div>
-        <input class="form-control me-sm-2" type="text" id="inputTarea${lista.id}" placeholder="¿Que piensas hacer?">
-        <button class="agregarSubList btn btn-secondary my-2 my-sm-0" type="submit" value="${lista.id}">Crear</button>
-    <br>
-    <table id="tabla">
-        <tr>
-            <th>ID</th>
-            <th>Tarea</th>
-            <th>¿completado?</th>
-            <th>Opciones</th>
-        </tr>
-        <tbody>
-            ${resultadoSub}
-        </tbody>
-    </table>
-
+        <div  id="${lista.id}">
+            <div class="input-group " id = "${lista.id}">
+                <h3 id="nombre-lista">Tarea : ${lista.name}</h3>
+                <button class="EliminarTarea btn btn-secondary" type="submit" id="borrar${lista.id}" ">Eliminar</button>
+            </div>
+            <input class="form-control me-sm-2" type="text" id="inputTarea${lista.id}" placeholder="¿Que piensas hacer?">
+            <button class="agregarSubList btn btn-secondary my-2 my-sm-0" type="submit" id="crear${lista.id}" value="${lista.id}">Crear</button>
+            <button style="display:none;" class="actualizarSubList btn btn-secondary my-2 my-sm-0" type="submit" id="Actualizar${lista.id}" value="${lista.id}">Actualizar</button>
+            <br>
+            <table class="table" id="${lista.id}">
+                <thead>
+                    <tr>
+                    <th>ID</th>
+                    <th>Tarea</th>
+                    <th>¿completado?</th>
+                    <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${resultadoSub}
+                </tbody>
+            </table>
+        </div>
         `
     })
     document.querySelector('.tbody1').innerHTML = resultado;
@@ -89,27 +98,68 @@ const mostrar = (listas) => {
  * implementa la accion del boton eliminar, lista .Busca entre el section el nombre de la clase igual al comparado
  * classList[0] muestra la composicion del DOMTokenList
  * target.previousElementSibling permite traerme el trabajo del nombre de la clase de la tarea e iterarlo
+ * path[n] permite acceder a los contenedores padres y entrar a su ubicacion
  * */
 body.addEventListener("click", (e) => {
+    console.log(e.target.parentElement.parentElement.id);
     if (e.target.classList[0] == "EliminarTarea") {
-        eliminarTarea(e.target.previousElementSibling.textContent)
+        eliminarTarea(e.target.parentElement.parentElement.id)
     }
-    if (e.target.classList[0] == "agregarSubList") { 
-        e.preventDefault()
-        console.log(e.path[0].value);
-          let dato = {
-            nombre:e.target.previousElementSibling.value,
-            id:e.path[0].value
-          } 
-          crearSubLista(dato)   
-      }
-      
+    if (e.target.classList[0] == "agregarSubList") {
+
+        //console.log(e.path[0].value);
+        let dato = {
+            nombre: e.target.previousElementSibling.value,
+            id: e.path[0].value
+        }
+        crearSubLista(dato)
+
+    }
+    console.log(e.target.classList[0]);
+    if (e.target.classList[0] == "actualizarSubList") {
+        let input = e.path[1].children[1].value;
+        editarSubList(subtarea.idpadre, subtarea.id, input)
+        console.log(e.path[1].children[1].value);
+    }
+    //eliminar subTarea
+
     if (e.target.classList[0] == "eliminar") {
-     eliminarSubTarea(e.target.parentElement.parentElement.children[0].textContent)
-  }
+        eliminarSubTarea(e.target.parentElement.parentElement.children[0].textContent)
+    }
+    //editar subtarea
+    if (e.target.classList[0] == "editar") {
+        e.preventDefault()
+        subtarea.id = e.path[0].value
+        subtarea.name = e.path[2].children[1].textContent;
+        subtarea.idpadre = e.path[4].id;
+
+        let input = e.path[5].children[1];
+        let btncrear = d.getElementById('crear' + e.path[4].id)
+        let boton = d.getElementById('Actualizar' + e.path[4].id)
+        btncrear.style.display = "none";
+        boton.style.display = "";
+        console.log(e.path[5].children[1]);
+        input.value = subtarea.name
+    }
+    if (e.target.classList[0] == "validar") {
+        console.log(e.path[2].children[3].children[0].value);
+        let btnvalidar = d.getElementById('editar' + e.path[2].children[3].children[0].value)
+        let check = d.getElementById('validar' + e.path[2].children[3].children[0].value).checked
+        if (check) {
+            btnvalidar.disabled = true;
+        } else {
+            btnvalidar.disabled = false;
+        }
+
+    }
+
+
+
 })
+
 //funcion eliminar , recibe como parametro el ID
 async function eliminarTarea(id) {
+    console.log(id);
     let options = {
         method: "DELETE",
         headers: {
@@ -121,36 +171,57 @@ async function eliminarTarea(id) {
     mostrarList()
 }
 //Crear SubTarea
-async function crearSubLista({nombre,id}){
-    
+async function crearSubLista({ nombre, id }) {
+    if (nombre) {
+        let options = {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({
+                completed: false,
+                name: nombre,
+                listaid: {
+                    id: id
+                }
+            })
+        },
+            res = await fetch(`${url}/listTask`, options)
+        mostrarList()
+    } else {
+        alert("Ingrese una subLista porfavor!")
+    }
+}
+//eliminar subTarea
+async function eliminarSubTarea(id) {
     let options = {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json; charset=utf-8"
-      },
-      body: JSON.stringify({  
-        completed: false,    
-             name: nombre,
-            listaid:{
-                id: id
-            }
-      })
+        method: "DELETE",
+        headers: {
+            "Content-type": "application/json; charset=utf-8"
+        },
     },
-      res = await fetch(`${url}/listTask`, options)
-      mostrarList()
+        res = await fetch(`${url}/listTask/${id}`, options)
+    mostrarList()
+}
+async function editarSubList(id1, id2, nombre) {
+    let options = {
+        method: "PUT",
+        headers: {
+            "Content-type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify({
+            completed: false,
+            name: nombre,
+            listaid: {
+                id: id1
+            }
+
+        })
+    },
+        res = await fetch(`${url}/listTask/${id2}`, options)
+    mostrarList()
 }
 
-async function eliminarSubTarea(id){
-    
-    let options = {
-      method: "DELETE",
-      headers: {
-        "Content-type": "application/json; charset=utf-8"
-      },     
-    },
-      res = await fetch(`${url}/listTask/${id}`, options)
-      mostrarList()
-}
 
 
 

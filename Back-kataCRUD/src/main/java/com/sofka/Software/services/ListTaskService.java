@@ -46,7 +46,7 @@ public class ListTaskService {
     }
 
     /**
-     * metodo actualizar subtare, me permite actualizar la lista
+     * metodo actualizar subtarea, me permite actualizar la lista
      * @param id
      * @param listTask
      * @return
