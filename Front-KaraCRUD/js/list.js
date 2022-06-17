@@ -54,7 +54,7 @@ const mostrar = (listas) => {
             </td>
             <td class="opciones">
                 <button type="button" id="editar${sub.id}" class="btn btn-secondary">Editar</button>
-                <button type="button" id="eliminar${sub.id}" class="btn btn-secondary">Eliminar</button>
+                <button class="eliminar btn btn-secondary" type="button" id="eliminar${sub.id}" >Eliminar</button>
             </td>
         </tr>`
         })
@@ -62,7 +62,7 @@ const mostrar = (listas) => {
     <div class="input-group mb-5">
         <h2 id="nombre-lista">${lista.name}</h2>
         <spam class = "spamId" area hidden true>${lista.id}</spam>
-        <button  type="submit" id="borrar${lista.id}" class="EliminarTarea btn btn-secondary my-2 my-sm-0">Eliminar</button>
+        <button class="EliminarTarea btn btn-secondary my-2 my-sm-0 type="submit" id="borrar${lista.id}" ">Eliminar</button>
     </div>
         <input class="form-control me-sm-2" type="text" id="inputTarea${lista.id}" placeholder="¿Que piensas hacer?">
         <button class="agregarSubList btn btn-secondary my-2 my-sm-0" type="submit" value="${lista.id}">Crear</button>
@@ -81,7 +81,6 @@ const mostrar = (listas) => {
 
         `
     })
-
     document.querySelector('.tbody1').innerHTML = resultado;
     resultado = "";
 }
@@ -95,21 +94,19 @@ body.addEventListener("click", (e) => {
     if (e.target.classList[0] == "EliminarTarea") {
         eliminarTarea(e.target.previousElementSibling.textContent)
     }
-    //revisar
     if (e.target.classList[0] == "agregarSubList") { 
         e.preventDefault()
         console.log(e.path[0].value);
-        //if (e.target.parentElement.children[3].textContent == "Crear") {
           let dato = {
             nombre:e.target.previousElementSibling.value,
             id:e.path[0].value
-          }
-          
+          } 
           crearSubLista(dato)   
-        
-            
       }
-
+      
+    if (e.target.classList[0] == "eliminar") {
+     eliminarSubTarea(e.target.parentElement.parentElement.children[0].textContent)
+  }
 })
 //funcion eliminar , recibe como parametro el ID
 async function eliminarTarea(id) {
@@ -140,6 +137,18 @@ async function crearSubLista({nombre,id}){
       })
     },
       res = await fetch(`${url}/listTask`, options)
+      mostrarList()
+}
+
+async function eliminarSubTarea(id){
+    
+    let options = {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json; charset=utf-8"
+      },     
+    },
+      res = await fetch(`${url}/listTask/${id}`, options)
       mostrarList()
 }
 
