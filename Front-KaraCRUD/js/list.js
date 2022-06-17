@@ -2,7 +2,7 @@
 const d = document,
     $title = d.getElementById("nombre-lista"),
     $crear = d.getElementById("crear"),
-    body = d.getElementById('tbody1'),
+    body = d.querySelector('.tbody1'),
     $input = d.getElementById('inputTarea').value
 const url = 'http://localhost:8080';
 let resultado = ''
@@ -41,11 +41,13 @@ async function mostrarList() {
 //Muesta la lista creada y permite interactuar con esta 
 const mostrar = (listas) => {
     listas.forEach(lista => {
-        // mostrarSubListas(lista)
+         //mostrarSubListas(lista)
         resultado += ` <hr>
     <div class="input-group mb-5">
+    
         <h2 id="nombre-lista">${lista.name}</h2>
-        <button  type="submit" id="borrar${lista.id}" class="btn btn-secondary my-2 my-sm-0">Eliminar</button>
+        <spam class = "spamId">${lista.id}</spam>
+        <button  type="submit" id="borrar${lista.id}" class="EliminarTarea btn btn-secondary my-2 my-sm-0">Eliminar</button>
     </div>
         <input class="form-control me-sm-2" type="text" id="inputTarea${lista.id}" placeholder="¿Que piensas hacer?">
         <button class="btn btn-secondary my-2 my-sm-0" type="submit" id="crearTarea${lista.id}">Crear</button>
@@ -86,12 +88,11 @@ const mostrar = (listas) => {
     })
 }*/
 
-document.getElementById('tbody1').addEventListener("click", (e) => {
-    console.log(e.classList)
-    if (e.target.classList[0] == "borrar") {
-        eliminarTarea(e.target.previousElementSibling.textContent)
-        console.log(e.target.classList)
+body.addEventListener("click", (e) => {
+    if (e.target.classList[0] == "EliminarTarea") {
+      eliminarTarea(e.target.previousElementSibling.textContent)
     }
+    console.log(e.target.classList);
 })
 
 async function eliminarTarea(id) {
@@ -102,8 +103,7 @@ async function eliminarTarea(id) {
         },
     },
         res = await fetch(`${url}/task/${id}`, options)
-        .then(() => location.reload())
-            alertify.success('Ok')
+
     mostrarList()
 }
 
