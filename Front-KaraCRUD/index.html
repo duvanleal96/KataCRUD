@@ -1,63 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="https://bootswatch.com/5/spacelab/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
-    <h1>To-Do-List</h1>  
-    <div class="input-group mb-3" >
-    <form class="d-flex">
-        <input class="form-control me-sm-2" type="text" placeholder="¿Lista de To-Do?">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Crear</button>
-      </form>
-    </div>
-    <!--template id="crud-template"-->
-    <hr>    
-            <h2  id="nombre-lista">holaaa</h2>
-            <button  type="button" class="btn btn-secondary">Eliminar</button>
-            <br>
-            <br>
-            <form class="d-flex">
-                <input class="form-control me-sm-2" type="text" placeholder="¿Que piensas hacer?">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit" id ="crearTarea">Crear</button>
-              </form>
-              <hr>
-              <table id="tabla">
-              <tr>
-                <th>ID</th>
-                <th>Tarea</th>
-                <th>¿completado?</th>
-                <th>Opciones</th>
-             </tr>
-             <tbody id="">
-
-             </tbody>
-            </table>
-        <!--/template-->
    
-    <br>
-    <tbody id="subtabla">
-    <tr>
-            <td class="id">1</td>
-            <td class="Tarea">comer</td>
-            <td>
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-            </td>
-            <td>
-                <button type="button" id="editar" class="btn btn-secondary">Editar</button>
-                <button type="button" id="eliminar"class="btn btn-secondary">Eliminar</button>
-            </td>
-    </tr>
-    </tbody>
+</head>
+<link rel="stylesheet" href="https://bootswatch.com/5/spacelab/bootstrap.min.css">
+<body>
+    <div id="principal" class="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
+        <h1>To-Do-List</h1>
+        <div class="input-group mb-3">
+                <input id="inputTarea" class="form-control me-sm-2" type="text" placeholder="¿Lista de To-Do?">
+                <button  class="btn btn-secondary my-2 my-sm-0" id="crear" type="submit">Crear</button>
+        </div>
+        <section class="tbody1">
+
+        </section>
+    </div>
     
-    <hr>     
-</div>
 </body>
-    <script src="/js/list.js"></script>
+<script type="module" src="./js/list.js" async defer></script>
+
 </html>
