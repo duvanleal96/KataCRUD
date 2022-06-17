@@ -16,7 +16,7 @@ $crear.addEventListener('click', e => {
 })
 //Funcion crear lista , consulta la ruta del fetch y realiza el metodo post con los datos 
 async function crearList(lista) {
-        console.log(lista);
+    
         let options = {
             method: "POST",
             headers: {
@@ -35,22 +35,37 @@ async function mostrarList() {
     let res = await fetch(`${url}/listas`)
     let data = await res.json()
     .catch(error => console.log(error))
-    console.log(data)
     mostrar(data)
+    console.log(data);
 }
+
 //Muesta la lista creada y permite interactuar con esta 
 const mostrar = (listas) => {
-    listas.forEach(lista => {
-         //mostrarSubListas(lista)
+   
+    listas.forEach(lista => {  
+        resultadoSub=''
+        lista.listTask.forEach(sub => {
+            resultadoSub += ` <tr>
+            <td class="id">${sub.id}</td>
+            <td class="Tarea">${sub.name}</td>
+            <td class="completado">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault"></label>
+            </td>
+            <td class="opciones">
+                <button type="button" id="editar${sub.id}" class="btn btn-secondary">Editar</button>
+                <button type="button" id="eliminar${sub.id}" class="btn btn-secondary">Eliminar</button>
+            </td>
+        </tr>`
+        })
         resultado += ` <hr>
     <div class="input-group mb-5">
-    
         <h2 id="nombre-lista">${lista.name}</h2>
         <spam class = "spamId">${lista.id}</spam>
         <button  type="submit" id="borrar${lista.id}" class="EliminarTarea btn btn-secondary my-2 my-sm-0">Eliminar</button>
     </div>
         <input class="form-control me-sm-2" type="text" id="inputTarea${lista.id}" placeholder="¿Que piensas hacer?">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit" id="crearTarea${lista.id}">Crear</button>
+        <button class="agregarSubList btn btn-secondary my-2 my-sm-0" type="submit" id="crearTarea${lista.id}">Crear</button>
     <br>
     <table id="tabla">
         <tr>
@@ -60,7 +75,7 @@ const mostrar = (listas) => {
             <th>Opciones</th>
         </tr>
         <tbody>
-          
+            ${resultadoSub}
         </tbody>
     </table>
 
@@ -71,30 +86,33 @@ const mostrar = (listas) => {
     resultado = "";
 }
 
-/*const mostrarSubListas=(subListas)=>{
-    subListas.forEach(sub => {
-        resultadoSub += ` <tr>
-        <td class="id">${sub.id}</td>
-        <td class="Tarea">${sub.name}</td>
-        <td class="completado">
-            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-            <label class="form-check-label" for="flexSwitchCheckDefault"></label>
-        </td>
-        <td class="opciones">
-            <button type="button" id="editar${sub.id}" class="btn btn-secondary">Editar</button>
-            <button type="button" id="eliminar${sub.id}" class="btn btn-secondary">Eliminar</button>
-        </td>
-    </tr>`
-    })
-}*/
-
+/**
+ * implementa la accion del boton eliminar, lista .Busca entre el section el nombre de la clase igual al comparado
+ * classList[0] muestra la composicion del DOMTokenList
+ * target.previousElementSibling permite traerme el trabajo del nombre de la clase de la tarea e iterarlo
+ * */
 body.addEventListener("click", (e) => {
     if (e.target.classList[0] == "EliminarTarea") {
       eliminarTarea(e.target.previousElementSibling.textContent)
     }
-    console.log(e.target.classList);
-})
+    
+    //revisar
+    if (e.target.classList[0] == "agregarSubList") {    
+      
+        if (e.target.parentElement.children[3].textContent == "Crear") {
+          let dato = {
+            nombre:e.target.previousElementSibling.value,
+            id:e.target.parentElement.children[1].children[1].textContent
+          }
+          
+          crearSubLista(dato.nombre,dato.id)   
+          console.log(dato.nombre);   
+        }
+            
+      }
 
+})
+//funcion eliminar , recibe como parametro el ID
 async function eliminarTarea(id) {
     let options = {
         method: "DELETE",
@@ -106,6 +124,25 @@ async function eliminarTarea(id) {
 
     mostrarList()
 }
+//Crear SubTarea
+async function crearSubLista(nombre,id){
+    
+    let options = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json; charset=utf-8"
+      },
+      body: JSON.stringify({        
+            listaid: {
+                id: id
+            },
+            name: nombre                        
+      })
+    },
+      res = await fetch(`${url}/listTask`, options)
+      mostrarList()
+}
+
 
 
 
