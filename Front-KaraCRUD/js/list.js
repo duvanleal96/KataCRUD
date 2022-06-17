@@ -36,7 +36,7 @@ async function mostrarList() {
     let data = await res.json()
     .catch(error => console.log(error))
     mostrar(data)
-    console.log(data);
+   // console.log(data);
 }
 
 //Muesta la lista creada y permite interactuar con esta 
@@ -61,11 +61,11 @@ const mostrar = (listas) => {
         resultado += ` <hr>
     <div class="input-group mb-5">
         <h2 id="nombre-lista">${lista.name}</h2>
-        <spam class = "spamId">${lista.id}</spam>
+        <spam class = "spamId" area hidden true>${lista.id}</spam>
         <button  type="submit" id="borrar${lista.id}" class="EliminarTarea btn btn-secondary my-2 my-sm-0">Eliminar</button>
     </div>
         <input class="form-control me-sm-2" type="text" id="inputTarea${lista.id}" placeholder="¿Que piensas hacer?">
-        <button class="agregarSubList btn btn-secondary my-2 my-sm-0" type="submit" id="crearTarea${lista.id}">Crear</button>
+        <button class="agregarSubList btn btn-secondary my-2 my-sm-0" type="submit" value="${lista.id}">Crear</button>
     <br>
     <table id="tabla">
         <tr>
@@ -93,21 +93,20 @@ const mostrar = (listas) => {
  * */
 body.addEventListener("click", (e) => {
     if (e.target.classList[0] == "EliminarTarea") {
-      eliminarTarea(e.target.previousElementSibling.textContent)
+        eliminarTarea(e.target.previousElementSibling.textContent)
     }
-    
     //revisar
-    if (e.target.classList[0] == "agregarSubList") {    
-      
-        if (e.target.parentElement.children[3].textContent == "Crear") {
+    if (e.target.classList[0] == "agregarSubList") { 
+        e.preventDefault()
+        console.log(e.path[0].value);
+        //if (e.target.parentElement.children[3].textContent == "Crear") {
           let dato = {
             nombre:e.target.previousElementSibling.value,
-            id:e.target.parentElement.children[1].children[1].textContent
+            id:e.path[0].value
           }
           
-          crearSubLista(dato.nombre,dato.id)   
-          console.log(dato.nombre);   
-        }
+          crearSubLista(dato)   
+        
             
       }
 
@@ -125,18 +124,19 @@ async function eliminarTarea(id) {
     mostrarList()
 }
 //Crear SubTarea
-async function crearSubLista(nombre,id){
+async function crearSubLista({nombre,id}){
     
     let options = {
       method: "POST",
       headers: {
         "Content-type": "application/json; charset=utf-8"
       },
-      body: JSON.stringify({        
-            listaid: {
+      body: JSON.stringify({  
+        completed: false,    
+             name: nombre,
+            listaid:{
                 id: id
-            },
-            name: nombre                        
+            }
       })
     },
       res = await fetch(`${url}/listTask`, options)
