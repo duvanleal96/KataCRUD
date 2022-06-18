@@ -45,7 +45,7 @@ async function mostrarList() {
 }
 mostrarList()
 
-//Muesta la lista creada y permite interactuar con esta 
+//Muesta la lista creada mediante 2 busquedas para mostra
 const mostrar = (listas) => {
 
     listas.forEach(lista => {
@@ -59,8 +59,8 @@ const mostrar = (listas) => {
                     <label class="form-check-label" for="flexSwitchCheckDefault"></label>
                 </td>
                 <td class="opciones">
-                    <button class="editar btn btn-secondary" value="${sub.id}" type="button" id="editar${sub.id}" class="editar btn btn-secondary">Editar</button>
-                    <button class="eliminar btn btn-secondary" type="button" id="eliminar${sub.id}" >Eliminar</button>
+                    <button class="editar btn btn-info" value="${sub.id}" type="button" id="editar${sub.id}" class="editar btn btn-secondary">Editar</button>
+                    <button class="eliminar btn btn-danger" type="button" id="eliminar${sub.id}" >Eliminar</button>
                 </td>
             </tr>`
         })
@@ -68,11 +68,11 @@ const mostrar = (listas) => {
         <div  id="${lista.id}">
             <div class="input-group " id = "${lista.id}">
                 <h3 id="nombre-lista">Tarea : ${lista.name}</h3>
-                <button class="EliminarTarea btn btn-secondary" type="submit" id="borrar${lista.id}" ">Eliminar</button>
+                <button class="EliminarTarea btn btn-danger" type="submit" id="borrar${lista.id}" ">Eliminar</button>
             </div>
             <input class="form-control me-sm-2" type="text" id="inputTarea${lista.id}" placeholder="¿Que piensas hacer?">
-            <button class="agregarSubList btn btn-secondary my-2 my-sm-0" type="submit" id="crear${lista.id}" value="${lista.id}">Crear</button>
-            <button style="display:none;" class="actualizarSubList btn btn-secondary my-2 my-sm-0" type="submit" id="Actualizar${lista.id}" value="${lista.id}">Actualizar</button>
+            <button class="agregarSubList btn btn-success my-2 my-sm-0" type="submit" id="crear${lista.id}" value="${lista.id}">Crear</button>
+            <button style="display:none;" class="actualizarSubList btn btn-success my-2 my-sm-0" type="submit" id="Actualizar${lista.id}" value="${lista.id}">Actualizar</button>
             <br>
             <table class="table" id="${lista.id}">
                 <thead>
@@ -115,18 +115,23 @@ body.addEventListener("click", (e) => {
         crearSubLista(dato)
 
     }
-    console.log(e.target.classList[0]);
+    //si el boton remplazado es 
+    //console.log(e.target.classList[0]);
     if (e.target.classList[0] == "actualizarSubList") {
         let input = e.path[1].children[1].value;
         editarSubList(subtarea.idpadre, subtarea.id, input)
         console.log(e.path[1].children[1].value);
     }
-    //eliminar subTarea
-
+    /**
+     * eliminar subtarea
+    */
     if (e.target.classList[0] == "eliminar") {
         eliminarSubTarea(e.target.parentElement.parentElement.children[0].textContent)
     }
-    //editar subtarea
+    /**
+     * editar subtarea , al pulsar el boton editar , muestra en el input con nombre de la tare actual
+     * me permite 
+    */
     if (e.target.classList[0] == "editar") {
         e.preventDefault()
         subtarea.id = e.path[0].value
@@ -138,9 +143,12 @@ body.addEventListener("click", (e) => {
         let boton = d.getElementById('Actualizar' + e.path[4].id)
         btncrear.style.display = "none";
         boton.style.display = "";
-        console.log(e.path[5].children[1]);
+        console.log(e.path[4]);
         input.value = subtarea.name
     }
+    /**
+     * function validar , verifica el estado del check para cambiar el estado del boton editar
+     */
     if (e.target.classList[0] == "validar") {
         console.log(e.path[2].children[3].children[0].value);
         let btnvalidar = d.getElementById('editar' + e.path[2].children[3].children[0].value)
@@ -203,6 +211,12 @@ async function eliminarSubTarea(id) {
         res = await fetch(`${url}/listTask/${id}`, options)
     mostrarList()
 }
+/**
+ * Editar sub lista 
+ * @param {*} id1 
+ * @param {*} id2 
+ * @param {*} nombre 
+ */
 async function editarSubList(id1, id2, nombre) {
     let options = {
         method: "PUT",
